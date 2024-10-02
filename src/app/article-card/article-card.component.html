@@ -1,0 +1,32 @@
+<button (click)="goToArticle(article.id)" class="max-w-sm rounded overflow-hidden shadow-lg bg-white border border-gray-300">
+  <!-- Image section -->
+  <img class="w-full" [src]="'data:image/png;base64,' + article.thumbnail_image" alt="Thumbnail" />
+
+  <!-- Card content -->
+  <div class="px-6 py-4">
+    <!-- Title -->
+    <h2 class="font-bold text-xl mb-2 text-gray-800">{{article.title}}</h2>
+
+    <!-- Category -->
+    <p class="text-sm text-gray-600 mb-4">{{article.category}}</p>
+
+    <!-- Description -->
+    <p class="text-gray-700 text-base" [innerHTML]="article.abstract"></p>
+  </div>
+
+  <!-- Divider -->
+  <div class="border-t border-gray-300"></div>
+
+  <!-- Footer with buttons -->
+  <div *ngIf="isLogged" class="px-6 py-4 flex justify-between items-center">
+    <!-- Edit button -->
+    <button (click)="goToEditArticle(article.id)" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+      Edit
+    </button>
+
+    <!-- Delete button -->
+    <button class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
+      Delete
+    </button>
+  </div>
+</button>

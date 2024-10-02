@@ -1,0 +1,25 @@
+<app-header/>
+<div class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <!-- Article Title -->
+  <h1 class="text-4xl font-bold mb-2">{{article.title}}</h1>
+
+  <!-- Article Subtitle -->
+  <h2 class="text-xl text-gray-600 mb-4">{{article.subtitle}}</h2>
+
+  <!-- Article Category -->
+  <span class="inline-block bg-blue-500 text-white text-sm font-semibold py-1 px-3 rounded-full mb-4">{{article.category}}</span>
+
+  <!-- Article Image -->
+  <img *ngIf="article.image_data"
+       [src]="'data:image/png;base64,' + article.image_data"
+       alt="Article Image"
+       class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6" />
+
+  <!-- Article Body -->
+  <div class="prose">
+    <div [innerHTML]="article.body"></div>
+  </div>
+
+  <!-- Button Back -->
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+</div>
