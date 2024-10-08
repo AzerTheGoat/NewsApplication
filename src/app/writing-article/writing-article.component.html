@@ -1,41 +1,45 @@
 <div class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
-  <form (ngSubmit)="saveArticle()">
+  <div *ngIf="isErrorOnFetchingArticleDetailsWhileEditing" class="text-red-500">Error while fetching article {{ errorMessage }}</div>
+
+  <form *ngIf="!isErrorOnFetchingArticleDetailsWhileEditing" (ngSubmit)="saveArticle()">
 
     <!-- Title -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
-    <input type="text" [(ngModel)]="Article.title" name="title" required class="border rounded w-full py-2 px-3 mb-4" />
+    <input type="text" [(ngModel)]="article.title" name="title" required class="border rounded w-full py-2 px-3 mb-4" />
 
     <!-- Subtitle -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Subtitle:</label>
-    <input type="text" [(ngModel)]="Article.subtitle" name="subtitle" required class="border rounded w-full py-2 px-3 mb-4" />
+    <input type="text" [(ngModel)]="article.subtitle" name="subtitle" required class="border rounded w-full py-2 px-3 mb-4" />
 
     <!-- Image Upload -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Upload Image:</label>
     <input type="file" (change)="fileChangeEvent($event)" class="mb-4" />
-    <img *ngIf="Article.image_data" [src]="'data:image/png;base64,' + Article.image_data" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-4" />
+    <img *ngIf="article.image_data" [src]="'data:image/png;base64,' + article.image_data" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-4" />
 
     <!-- Error Message -->
     <p *ngIf="imageError" class="text-red-500">{{ imageError }}</p>
 
     <!-- Category -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
-    <input type="text" [(ngModel)]="Article.category" name="category" required class="border rounded w-full py-2 px-3 mb-4" />
+    <input type="text" [(ngModel)]="article.category" name="category" required class="border rounded w-full py-2 px-3 mb-4" />
 
     <!-- Abstract -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Abstract:</label>
-    <textarea [(ngModel)]="Article.abstract" name="abstract" rows="3" required class="border rounded w-full py-2 px-3 mb-4"></textarea>
+    <textarea [(ngModel)]="article.abstract" name="abstract" rows="3" required class="border rounded w-full py-2 px-3 mb-4"></textarea>
 
     <!-- Body -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Body:</label>
-    <textarea [(ngModel)]="Article.body" name="body" rows="6" required class="border rounded w-full py-2 px-3 mb-4"></textarea>
+    <textarea [(ngModel)]="article.body" name="body" rows="6" required class="border rounded w-full py-2 px-3 mb-4"></textarea>
 
-    <!-- Submit Button -->
-    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-      Save Article
-    </button>
+    <div class="flex">
+      <!-- Submit Button -->
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Save Article
+      </button>
 
-    <!-- Error Message -->
-    <p *ngIf="errorOnSubmit" class="m-3 text-red-500">Error while saving article {{ errorMessage }}</p>
+      <!-- Error Message -->
+      <p *ngIf="errorOnSubmit" class="m-3 text-red-500">Error while saving article {{ errorMessage }}</p>
+    </div>
 
   </form>
 </div>

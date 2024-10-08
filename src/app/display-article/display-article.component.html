@@ -1,4 +1,11 @@
-<div class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+
+<div *ngIf="isErrorOnFetchingArticleDetailsWhileEditing" class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <h1 class="text-4xl font-bold mb-2">Error</h1>
+  <p class="text-xl text-gray-600 mb-4">An error occurred while fetching the article details.</p>
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+</div>
+
+<div *ngIf="!isErrorOnFetchingArticleDetailsWhileEditing" class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
   <!-- Article Title -->
   <h1 class="text-4xl font-bold mb-2">{{article.title}}</h1>
 
@@ -20,5 +27,8 @@
   </div>
 
   <!-- Button Back -->
-  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+  <div class = "flex ">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ml-4" (click)="goToEditArticle()"  *ngIf="isLogged">edit</button>
+  </div>
 </div>

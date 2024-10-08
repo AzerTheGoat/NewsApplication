@@ -2,7 +2,7 @@ export class Article{
   abstract: string='';
   aut : number=0;
   category: string='';
-  id: number=10;
+  id?: number=undefined;
   id_user: number=0;
   is_deleted: number=0;
   is_public: number=1;

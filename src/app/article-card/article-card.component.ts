@@ -18,14 +18,32 @@ export class ArticleCardComponent {
   @Input() article: Article = new Article();
   @Input() isLogged: boolean = false;
 
-  constructor(private router : Router) {
+  constructor(private router : Router, private newsService: NewsService) {
   }
 
-  goToArticle(newsId: number) {
+  goToArticle(newsId?: number) {
+    if (!newsId) {
+      alert('No article id provided');
+      return;
+    }
     this.router.navigate(['/detail/' + newsId]);
   }
 
-  goToEditArticle(newsId: number) {
+  goToEditArticle(newsId?: number) {
+    if (!newsId) {
+      alert('No article id provided');
+      return;
+    }
     this.router.navigate(['/write-article/' + newsId]);
+  }
+
+  deleteArticle(newsId?: number) {
+    if (!newsId) {
+      alert('No article id provided');
+      return;
+    }
+    this.newsService.deleteArticle(newsId).subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 }

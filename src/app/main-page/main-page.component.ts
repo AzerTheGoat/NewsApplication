@@ -3,7 +3,7 @@ import {HeaderComponent} from "../header/header.component";
 import {ArticleCardComponent} from "../article-card/article-card.component";
 import {LoginService} from "../services/login.service";
 import {NewsService} from "../services/news.service";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {Article} from "../entities/Article";
 import {FilterCardsSearchInputPipe} from "../pipes/filterCardsSearchInput.pipe";
 import {FilterCardsSearchCategoryPipe} from "../pipes/filterCardsCategory.pipe";
@@ -16,7 +16,8 @@ import {FilterCardsSearchCategoryPipe} from "../pipes/filterCardsCategory.pipe";
     ArticleCardComponent,
     NgForOf,
     FilterCardsSearchInputPipe,
-    FilterCardsSearchCategoryPipe
+    FilterCardsSearchCategoryPipe,
+    NgIf
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
@@ -26,6 +27,8 @@ export class MainPageComponent implements OnInit{
   isLogged: boolean = false;
   searchText: string = '';
   categorySelected: string = '';
+  isErrorOnFetchingArticles: boolean = false;
+  errorMessage: string = '';
 
   constructor(private newService: NewsService, private loginService: LoginService, private newsService: NewsService) {
     this.loginService.isLogged$.subscribe(status => {
@@ -42,8 +45,13 @@ export class MainPageComponent implements OnInit{
   ngOnInit() {
     this.newService.getArticles().subscribe(articles => {
       this.articles = articles;
-    }, error =>
-    console.log(error));
+    }, error => {
+        alert('Error loading articles' + error);
+        this.isErrorOnFetchingArticles = true;
+        this.errorMessage = error;
+      }
+    );
+
   }
 
 

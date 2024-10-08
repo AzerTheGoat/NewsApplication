@@ -19,7 +19,7 @@ import {HeaderComponent} from "../header/header.component";
   styleUrls: ['./writing-article.component.css']
 })
 export class WritingArticleComponent implements OnInit {
-  Article: Article = new Article();
+  article: Article = new Article();
 
   imageError: string | null = null;
   isImageSaved: boolean = false;
@@ -28,18 +28,26 @@ export class WritingArticleComponent implements OnInit {
   errorOnSubmit : boolean = false;
   errorMessage : string = '';
 
+  isErrorOnFetchingArticleDetailsWhileEditing: boolean = false;
+
   constructor(private newsService: NewsService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     if(!isNaN(Number(this.route.snapshot.paramMap.get('id')))){
       this.newsService.getArticle(+this.route.snapshot.paramMap.get('id')!).subscribe(article => {
-        this.Article = article;
-      });
+        this.article = article;
+      },
+          error => {
+          alert('Error loading article details' + error);
+          this.isErrorOnFetchingArticleDetailsWhileEditing = true;
+        }
+      );
     }
   }
 
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
+
     if (fileInput.target.files && fileInput.target.files[0]) {
       const MAX_SIZE = 20971520; // 20MB
       const ALLOWED_TYPES = ['image/png', 'image/jpeg'];
@@ -59,10 +67,9 @@ export class WritingArticleComponent implements OnInit {
         const imgBase64Path = e.target.result;
         this.cardImageBase64 = imgBase64Path;
         this.isImageSaved = true;
-        this.Article.thumbnail_media_type = fileInput.target.files[0].type;
-        const head = this.Article.thumbnail_media_type.length + 13;
-        this.Article.image_data = e.target.result.substring(head);
-        this.Article.image_media_type = fileInput.target.files[0].type;
+        const head = this.article.image_media_type.length + 13;
+        this.article.image_data = e.target.result.substring(head);
+        this.article.image_media_type = fileInput.target.files[0].type;
       };
       reader.readAsDataURL(fileInput.target.files[0]);
     }
@@ -72,10 +79,10 @@ export class WritingArticleComponent implements OnInit {
   saveArticle() {
     if (isNaN(Number(this.route.snapshot.paramMap.get('id')))) {
       // Creating an article
-      this.newsService.createArticle(this.Article).subscribe(
+      this.newsService.createArticle(this.article).subscribe(
         response => {
           console.log('Article created:', response);
-          this.errorOnSubmit = false; // No error, reset the error flag
+          this.errorOnSubmit = false;
           this.router.navigate(['/']);
         },
         error => {
@@ -83,14 +90,15 @@ export class WritingArticleComponent implements OnInit {
           this.errorOnSubmit = true;
           this.errorMessage = 'Failed to create the article: ' + error.message;
           console.error('Error creating article:', error);
+          alert('Error creating article' + error);
         }
       );
     } else {
       // Updating an article
-      this.newsService.updateArticle(this.Article).subscribe(
+      this.newsService.updateArticle(this.article).subscribe(
         response => {
           console.log('Article updated:', response);
-          this.errorOnSubmit = false; // No error, reset the error flag
+          this.errorOnSubmit = false;
           this.router.navigate(['/']);
 
         },
@@ -99,6 +107,7 @@ export class WritingArticleComponent implements OnInit {
           this.errorOnSubmit = true;
           this.errorMessage = 'Failed to update the article: ' + error.message;
           console.error('Error updating article:', error);
+          alert('Error updating article' + error);
         }
       );
     }

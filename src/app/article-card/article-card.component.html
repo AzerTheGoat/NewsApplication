@@ -1,4 +1,4 @@
-<button (click)="goToArticle(article.id)" class="max-w-sm rounded overflow-hidden shadow-lg bg-white border border-gray-300">
+<button (click)="goToArticle(article?.id)" class="max-w-sm rounded overflow-hidden shadow-lg bg-white border border-gray-300">
   <!-- Image section -->
   <img class="w-full" [src]="'data:image/png;base64,' + article.thumbnail_image" alt="Thumbnail" />
 
@@ -20,12 +20,12 @@
   <!-- Footer with buttons -->
   <div *ngIf="isLogged" class="px-6 py-4 flex justify-between items-center">
     <!-- Edit button -->
-    <button (click)="goToEditArticle(article.id)" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+    <button (click)="goToEditArticle(article?.id)" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
       Edit
     </button>
 
     <!-- Delete button -->
-    <button class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
+    <button (click)="deleteArticle(article?.id)" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
       Delete
     </button>
   </div>
