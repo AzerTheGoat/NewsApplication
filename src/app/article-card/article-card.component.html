@@ -1,6 +1,7 @@
-<button (click)="goToArticle(article?.id)" class="max-w-sm rounded overflow-hidden shadow-lg bg-white border border-gray-300">
+<button (click)="goToArticle(article.id)" class="max-w-sm rounded overflow-hidden shadow-lg bg-white border border-gray-300">
   <!-- Image section -->
-  <img class="w-full" [src]="'data:image/png;base64,' + article.thumbnail_image" alt="Thumbnail" />
+  <img *ngIf="article.thumbnail_media_type === 'image/png'" class="w-full" [src]="'data:image/png;base64,' + article.thumbnail_image" alt="Thumbnail" />
+  <img *ngIf="article.thumbnail_media_type === 'image/jpeg'" class="w-full" [src]="'data:image/jpg;base64,' + article.thumbnail_image" alt="Thumbnail" />
 
   <!-- Card content -->
   <div class="px-6 py-4">
@@ -10,7 +11,7 @@
     <!-- Category -->
     <p class="text-sm text-gray-600 mb-4">{{article.category}}</p>
 
-    <!-- Description -->
+    <!-- abstract -->
     <p class="text-gray-700 text-base" [innerHTML]="article.abstract"></p>
   </div>
 
@@ -20,13 +21,33 @@
   <!-- Footer with buttons -->
   <div *ngIf="isLogged" class="px-6 py-4 flex justify-between items-center">
     <!-- Edit button -->
-    <button (click)="goToEditArticle(article?.id)" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+    <button (click)="goToEditArticle(article.id)" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
       Edit
     </button>
 
     <!-- Delete button -->
-    <button (click)="deleteArticle(article?.id)" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
+    <button (click)="openModal(); $event.stopPropagation()" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
       Delete
     </button>
   </div>
 </button>
+
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white p-8 rounded shadow-lg">
+    <p class="text-gray-800 text-lg">Are you sure you want to delete this article?</p>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-300 my-4"></div>
+
+    <div class="flex justify-between mt-4">
+      <button (click)="closeModal()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+        Cancel
+      </button>
+      <!-- error message -->
+      <p *ngIf="errorMessage" class="text-red-500 py-2 px-4 mx-4">Error while trying to delete : {{errorMessage}}</p>
+      <button (click)="deleteArticle(article.id)" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

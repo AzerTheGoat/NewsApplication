@@ -17,6 +17,8 @@ import {Router} from "@angular/router";
 export class ArticleCardComponent {
   @Input() article: Article = new Article();
   @Input() isLogged: boolean = false;
+  isModalOpen: boolean = false;
+  errorMessage: string = '';
 
   constructor(private router : Router, private newsService: NewsService) {
   }
@@ -37,13 +39,27 @@ export class ArticleCardComponent {
     this.router.navigate(['/write-article/' + newsId]);
   }
 
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
   deleteArticle(newsId?: number) {
     if (!newsId) {
       alert('No article id provided');
       return;
     }
     this.newsService.deleteArticle(newsId).subscribe(() => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/']).then(() => {
+        window.location.reload();
+      });
+      this.isModalOpen = false;
+    }, error => {
+      this.errorMessage = error;
     });
+
   }
 }

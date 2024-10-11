@@ -3,7 +3,9 @@
 </header>
 
 <div class="flex flex-wrap gap-4 justify-center items-center mx-auto my-4">
-  <div *ngIf="isErrorOnFetchingArticles" class="text-center text-2xl">No articles found {{errorMessage}}</div>
+  <div *ngIf="isErrorOnFetchingArticles" class="text-center text-2xl">Error while fetching for articles : {{errorMessage}}</div>
+
+  <div *ngIf="articles.length === 0 && isDataLoaded" class="text-center text-2xl">No articles found</div>
 
   <ng-container *ngFor="let article of articles | FilterCardsCategory : categorySelected | FilterCardsSearchInput : searchText ">
     <app-article-card [article]="article" [isLogged]="isLogged"></app-article-card>

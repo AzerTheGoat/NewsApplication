@@ -16,10 +16,9 @@
   <span class="inline-block bg-blue-500 text-white text-sm font-semibold py-1 px-3 rounded-full mb-4">{{article.category}}</span>
 
   <!-- Article Image -->
-  <img *ngIf="article.image_data"
-       [src]="'data:image/png;base64,' + article.image_data"
-       alt="Article Image"
-       class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6" />
+  <img *ngIf="article.image_media_type === 'image/png'" class="w-full" [src]="'data:image/png;base64,' + article.image_data" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6"  />
+  <img *ngIf="article.image_media_type === 'image/jpeg'" class="w-full" [src]="'data:image/jpg;base64,' + article.image_data" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6"  />
+
 
   <!-- Article Body -->
   <div class="prose">

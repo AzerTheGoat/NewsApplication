@@ -28,6 +28,7 @@ export class MainPageComponent implements OnInit{
   searchText: string = '';
   categorySelected: string = '';
   isErrorOnFetchingArticles: boolean = false;
+  isDataLoaded: boolean = false;
   errorMessage: string = '';
 
   constructor(private newService: NewsService, private loginService: LoginService, private newsService: NewsService) {
@@ -45,6 +46,7 @@ export class MainPageComponent implements OnInit{
   ngOnInit() {
     this.newService.getArticles().subscribe(articles => {
       this.articles = articles;
+      this.isDataLoaded = true;
     }, error => {
         alert('Error loading articles' + error);
         this.isErrorOnFetchingArticles = true;
