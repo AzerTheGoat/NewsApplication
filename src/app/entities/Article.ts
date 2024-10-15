@@ -12,4 +12,6 @@ export class Article{
   body: string='';
   image_data: string='';
   image_media_type: string='';
+  update_date: string = ''; 
+  updated_by: string = '';   
 }

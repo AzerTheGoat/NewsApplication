@@ -18,12 +18,15 @@
     <label class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
     <input formControlName="title" type="text" class="border rounded w-full py-2 px-3 mb-4" />
     <div *ngIf="titleControl && titleControl.invalid && !titleControl.untouched" class="text-red-500">
-      Title is required.
+      Title is required and must be at least 6 characters.
     </div>
 
     <!-- Subtitle -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Subtitle:</label>
     <input formControlName="subtitle" type="text" class="border rounded w-full py-2 px-3 mb-4" />
+    <div *ngIf="subtitleControl && subtitleControl.invalid && !subtitleControl.untouched" class="text-red-500">
+      Subtitle is required.
+    </div>
 
     <!-- Image Upload -->
     <label class="block text-gray-700 text-sm font-bold mb-2">Upload Image:</label>

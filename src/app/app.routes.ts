@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 import {MainPageComponent} from "./main-page/main-page.component";
-import {DisplayArticleComponent} from "./display-article/display-article.component";
-import {WritingArticleComponent} from "./writing-article/writing-article.component";
+import {DetailsArticleComponent} from "./article-details/article-details.component";
+import {EditionArticleComponent} from "./article-edition/article-edition.component";
+
 
 export const routes: Routes = [
   { path: '', component: MainPageComponent},
-  { path: 'detail/:id', component: DisplayArticleComponent },
-  { path: 'write-article/:id', component: WritingArticleComponent },
+  { path: 'detail/:id', component: DetailsArticleComponent },
+  { path: 'write-article/:id', component: EditionArticleComponent },
 
 ];

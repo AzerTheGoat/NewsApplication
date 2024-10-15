@@ -5,23 +5,23 @@ import {NewsService} from "../services/news.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-article-card',
+  selector: 'app-article-list',
   standalone: true,
   imports: [
     NgIf,
     NgOptimizedImage
   ],
-  templateUrl: './article-card.component.html',
-  styleUrl: './article-card.component.css'
+  templateUrl: './article-list.component.html',
+  styleUrl: './article-list.component.css'
 })
-export class ArticleCardComponent {
+export class ArticleListComponent {
   @Input() article: Article = new Article();
   @Input() isLogged: boolean = false;
   isModalOpen: boolean = false;
   errorMessage: string = '';
+  successMessage: string = '';
 
-  constructor(private router : Router, private newsService: NewsService) {
-  }
+  constructor(private router: Router, private newsService: NewsService) {}
 
   goToArticle(newsId?: number) {
     if (!newsId) {
@@ -53,13 +53,21 @@ export class ArticleCardComponent {
       return;
     }
     this.newsService.deleteArticle(newsId).subscribe(() => {
-      this.router.navigate(['/']).then(() => {
-        window.location.reload();
-      });
-      this.isModalOpen = false;
-    }, error => {
-      this.errorMessage = error;
-    });
-
+        this.successMessage = 'The article was successfully deleted.'; // Message de succès
+        this.errorMessage = ''; // Réinitialiser le message d'erreur
+        this.isModalOpen = false;
+        // Ajouter un délai avant de rafraîchir la page (par exemple 2 secondes)
+        setTimeout(() => {
+        this.router.navigate(['/']).then(() => {
+          window.location.reload();
+        });
+      }, 2000);
+      },
+      (error) => {
+        this.errorMessage = error;
+        this.successMessage = ''; // Réinitialiser le message de succès
+        this.isModalOpen = false;
+      }
+    );
   }
 }

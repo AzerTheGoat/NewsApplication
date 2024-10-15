@@ -10,7 +10,7 @@ import {LoginService} from "../services/login.service";
 import {Category} from "../entities/Category";
 
 @Component({
-  selector: 'app-writing-article',
+  selector: 'app-edition-article',
   standalone: true,
   imports: [
     FormsModule,
@@ -19,10 +19,10 @@ import {Category} from "../entities/Category";
     ReactiveFormsModule,
     NgForOf
   ],
-  templateUrl: './writing-article.component.html',
-  styleUrls: ['./writing-article.component.css']
+  templateUrl: './article-edition.component.html',
+  styleUrls: ['./article-edition.component.css']
 })
-export class WritingArticleComponent implements OnInit {
+export class EditionArticleComponent implements OnInit {
   articleForm: FormGroup;
   imageError: string | null = null;
   isImageSaved: boolean = false;
@@ -38,12 +38,13 @@ export class WritingArticleComponent implements OnInit {
   categories = Object.values(Category); // Pour générer les options du select
   Category = Category; // Pour accéder à l'énumération dans le template
 
+  successMessage: string = '';
 
   constructor(private fb: FormBuilder, private newsService: NewsService, private route: ActivatedRoute, private router: Router, private loginService: LoginService) {
     this.articleForm = this.fb.group({
       id: [undefined],
       title: ['', [Validators.required, Validators.minLength(5)]],
-      subtitle: [''],
+      subtitle: ['',[Validators.required]],
       category: [Category.NONE, [Validators.required, this.categoryValidator]], // Ajout de la validation personnalisée
       abstract: ['', Validators.required],
       body: [''],
@@ -133,38 +134,51 @@ export class WritingArticleComponent implements OnInit {
 
   saveArticle() {
     this.markAllAsTouched();
+
     if (this.articleForm.invalid) {
-      this.errorOnSubmit = true;
-      this.errorMessage = 'Please fill in the required fields.';
-      return;
+        this.errorOnSubmit = true;
+        this.errorMessage = 'Please fill in the required fields.';
+        return;
     }
 
     const articleData = this.articleForm.value;
     const articleId = this.route.snapshot.paramMap.get('id');
-    if (articleId && !isNaN(Number(articleId))) {
-      // Update article
-      this.newsService.updateArticle(articleData).subscribe(
-        response => {
-          this.router.navigate(['/']);
-        },
-        error => {
-          this.errorOnSubmit = true;
-          this.errorMessage = 'Failed to update the article: ' + error.message;
+
+    this.loginService.username$.subscribe(username => {
+        articleData.updated_by = username; 
+
+        if (articleId && !isNaN(Number(articleId))) {
+            // Mise à jour de l'article existant
+            this.newsService.updateArticle(articleData).subscribe(
+                response => {
+                    this.successMessage = 'Article updated successfully!';
+                    setTimeout(() => this.successMessage = '', 3000);
+                    this.router.navigate(['/']);
+                },
+                error => {
+                    this.errorOnSubmit = true;
+                    this.errorMessage = 'Failed to update the article: ' + error.message;
+                }
+            );
+        } else {
+            // Création d'un nouvel article
+            this.newsService.createArticle(articleData).subscribe(
+                response => {
+                    window.alert('Article created successfully!');
+                    this.router.navigate(['/']);
+                },
+                error => {
+                    this.errorOnSubmit = true;
+                    this.errorMessage = 'Failed to create the article: ' + error.message;
+                }
+            );
         }
-      );
-    } else {
-      // Create article
-      this.newsService.createArticle(articleData).subscribe(
-        response => {
-          this.router.navigate(['/']);
-        },
-        error => {
-          this.errorOnSubmit = true;
-          this.errorMessage = 'Failed to create the article: ' + error.message;
-        }
-      );
-    }
-  }
+    });
+}
+
+
+  
+
 
   goToMainPage() {
     this.router.navigate(['/']);

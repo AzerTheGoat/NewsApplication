@@ -8,6 +8,6 @@
   <div *ngIf="articles.length === 0 && isDataLoaded" class="text-center text-2xl">No articles found</div>
 
   <ng-container *ngFor="let article of articles | FilterCardsCategory : categorySelected | FilterCardsSearchInput : searchText ">
-    <app-article-card [article]="article" [isLogged]="isLogged"></app-article-card>
+    <app-article-list [article]="article" [isLogged]="isLogged"></app-article-list>
   </ng-container>
 </div>

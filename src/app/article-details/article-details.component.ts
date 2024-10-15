@@ -9,15 +9,15 @@ import {HeaderComponent} from "../header/header.component";
 import {LoginService} from "../services/login.service";
 
 @Component({
-  selector: 'app-display-article',
+  selector: 'app-article-details',
   standalone: true,
   imports: [
     NgIf, CommonModule, HeaderComponent
   ],
-  templateUrl: './display-article.component.html',
-  styleUrl: './display-article.component.css'
+  templateUrl: './article-details.component.html',
+  styleUrl: './article-details.component.css'
 })
-export class DisplayArticleComponent implements OnInit {
+export class DetailsArticleComponent implements OnInit {
   article: Article = new Article();
   isErrorOnFetchingArticleDetailsWhileEditing: boolean = false;
   isLogged: boolean = false;
@@ -35,6 +35,7 @@ export class DisplayArticleComponent implements OnInit {
 
     this.newsService.getArticle(articleId).subscribe(article => {
         this.article = article;
+        console.log("article ",article);
       },
       error => {
         alert('Error loading article details' + error);

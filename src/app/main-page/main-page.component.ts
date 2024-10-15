@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HeaderComponent} from "../header/header.component";
-import {ArticleCardComponent} from "../article-card/article-card.component";
+import {ArticleListComponent} from "../article-list/article-list.component";
 import {LoginService} from "../services/login.service";
 import {NewsService} from "../services/news.service";
 import {NgForOf, NgIf} from "@angular/common";
@@ -13,7 +13,7 @@ import {FilterCardsSearchCategoryPipe} from "../pipes/filterCardsCategory.pipe";
   standalone: true,
   imports: [
     HeaderComponent,
-    ArticleCardComponent,
+    ArticleListComponent,
     NgForOf,
     FilterCardsSearchInputPipe,
     FilterCardsSearchCategoryPipe,

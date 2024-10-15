@@ -19,10 +19,18 @@
   <img *ngIf="article.image_media_type === 'image/png'" class="w-full" [src]="'data:image/png;base64,' + article.image_data" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6"  />
   <img *ngIf="article.image_media_type === 'image/jpeg'" class="w-full" [src]="'data:image/jpg;base64,' + article.image_data" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6"  />
 
+  <!-- Article Abstract -->
+  <div class="text-sm text-black font-bold mb-4" [innerHTML]="article.abstract"></div>
 
   <!-- Article Body -->
   <div class="prose">
     <div [innerHTML]="article.body"></div>
+  </div>
+
+  <!-- Article Last Modified Info -->
+  <div class="mt-8 text-gray-600 text-sm">
+    <p>Last modified on: <span class="font-semibold">{{ article.update_date | date:'longDate' }} at {{ article.update_date | date:'shortTime' }}</span></p>
+    <p>Modified by: <span class="font-semibold">{{ article.username }}</span></p>
   </div>
 
   <!-- Button Back -->
