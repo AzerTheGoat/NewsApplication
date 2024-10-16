@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {LoginService} from "../services/login.service";
 import {NewsService} from "../services/news.service";
 import {Router} from "@angular/router";
+import {Category} from "../entities/Category";
 
 @Component({
   selector: 'app-header',
@@ -24,7 +25,9 @@ export class HeaderComponent {
   isLogged: boolean = false;
   usermane: string = '';
   searchText: string = '';
-  categorySelected: string = '';
+  categorySelected: Category = Category.NONE;
+  menuOpen: boolean = false;
+  isMobile: boolean = false;
 
   constructor(private fb: FormBuilder, private loginService : LoginService, public newsService: NewsService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -43,6 +46,14 @@ export class HeaderComponent {
     this.newsService.categoryFilter$.subscribe(category => {
       this.categorySelected = category;
     });
+    this.isMobile = window.innerWidth < 768;
+    window.onresize = () => {
+      this.isMobile = window.innerWidth < 768;
+    };
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 
   get usernameControl() {
@@ -95,4 +106,6 @@ export class HeaderComponent {
   goToWriteArticle() {
     this.router.navigate(['/write-article/create']);
   }
+
+  protected readonly Category = Category;
 }

@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LoginService } from './login.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Article} from "../entities/Article";
+import {Category} from "../entities/Category";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +13,7 @@ export class NewsService {
   private newsUrl = 'http://sanger.dia.fi.upm.es/pui-rest-news/articles';
   private articleUrl = 'http://sanger.dia.fi.upm.es/pui-rest-news/article';
   private searchCardInput = new BehaviorSubject<string>("");
-  private categoryFilter = new BehaviorSubject<string>("");
+  private categoryFilter = new BehaviorSubject<Category>(Category.NONE);
 
 
   constructor(private http: HttpClient) {
@@ -26,7 +25,7 @@ export class NewsService {
   setSearchInput(searchText: string) {
     this.searchCardInput.next(searchText);
   }
-  setCategoryFilter(category: string) {
+  setCategoryFilter(category: Category) {
     this.categoryFilter.next(category);
   }
 

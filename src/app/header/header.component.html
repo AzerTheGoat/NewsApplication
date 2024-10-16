@@ -1,50 +1,56 @@
 <div class="bg-gray-800 text-white p-4">
   <div class="container mx-auto flex justify-between items-center">
-    <!-- Left: Categories -->
-    <nav class="space-x-4 flex">
+
+    <!-- Mobile Menu Button -->
+    <button (click)="toggleMenu()" class="text-white md:hidden focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+
+    <!-- Left: Categories (Hidden on mobile unless menu is open) -->
+    <nav [ngClass]="{'hidden': !menuOpen, 'flex': menuOpen || !isMobile}" class="space-x-4 flex-col md:flex md:flex-row md:space-x-4 md:static absolute top-16 left-0 w-full md:w-auto bg-gray-800 md:bg-transparent z-50 p-4 md:p-0">
       <button
-        (click)="newsService.setCategoryFilter('')"
-        [ngClass]="{'active-category': categorySelected === ''}"
+        (click)="newsService.setCategoryFilter(Category.NONE); menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.NONE}"
         class="hover:text-gray-300">All</button>
 
       <button
-        (click)="newsService.setCategoryFilter('National')"
-        [ngClass]="{'active-category': categorySelected === 'National'}"
+        (click)="newsService.setCategoryFilter(Category.NATIONAL) ; menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.NATIONAL}"
         class="hover:text-gray-300">National</button>
 
       <button
-        (click)="newsService.setCategoryFilter('Economy')"
-        [ngClass]="{'active-category': categorySelected === 'Economy'}"
+        (click)="newsService.setCategoryFilter(Category.ECONOMY) ; menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.ECONOMY}"
         class="hover:text-gray-300">Economy</button>
 
       <button
-        (click)="newsService.setCategoryFilter('Sports')"
-        [ngClass]="{'active-category': categorySelected === 'Sports'}"
+        (click)="newsService.setCategoryFilter(Category.SPORT) ; menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.SPORT}"
         class="hover:text-gray-300">Sports</button>
 
       <button
-        (click)="newsService.setCategoryFilter('Technology')"
-        [ngClass]="{'active-category': categorySelected === 'Technology'}"
+        (click)="newsService.setCategoryFilter(Category.TECHNOLOGY); menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.TECHNOLOGY}"
         class="hover:text-gray-300">Technology</button>
     </nav>
 
-    <!-- Center: Search Input -->
-    <div class="relative">
-      <input [(ngModel)]="searchText" (input)="newsService.setSearchInput(searchText)"  type="text" placeholder="Search..." class="w-80 py-2 pl-4 pr-10 rounded-full bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <svg class="w-5 h-5 absolute right-3 top-2.5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.69-5.31a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
+    <!-- Center: Search Input (visible on all screen sizes) -->
+    <div class="">
+      <input [(ngModel)]="searchText" (input)="newsService.setSearchInput(searchText)"  type="text" placeholder="Search..." class="w-80 py-2 m-2 pl-4 pr-10 rounded-full bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
     </div>
 
-    <!-- Right: Login Button -->
-    <div *ngIf="!isLogged">
+    <!-- Right: Login / User actions -->
+    <div *ngIf="!isLogged" class="md:block">
       <button (click)="openModal()" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">
         Login
       </button>
     </div>
-    <div *ngIf="isLogged" class = "flex items-center">
-      <p>Welcome {{usermane}}</p>
-      <button (click)="goToWriteArticle()" class="ml-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">
+    <div *ngIf="isLogged" class="hidden md:flex items-center">
+      <p >Welcome {{usermane}}</p>
+      <button (click)="goToWriteArticle()" class="  ml-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">
         Create Article
       </button>
       <button (click)="logout()" class="ml-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">

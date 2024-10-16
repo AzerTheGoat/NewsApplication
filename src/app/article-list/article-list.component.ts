@@ -3,6 +3,7 @@ import {Article} from "../entities/Article";
 import {NgIf, NgOptimizedImage} from "@angular/common";
 import {NewsService} from "../services/news.service";
 import {Router} from "@angular/router";
+import {MainPageComponent} from "../main-page/main-page.component";
 
 @Component({
   selector: 'app-article-list',
@@ -21,7 +22,7 @@ export class ArticleListComponent {
   errorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private router: Router, private newsService: NewsService) {}
+  constructor(private router: Router, private newsService: NewsService, private mainPageComponent : MainPageComponent) {}
 
   goToArticle(newsId?: number) {
     if (!newsId) {
@@ -53,19 +54,16 @@ export class ArticleListComponent {
       return;
     }
     this.newsService.deleteArticle(newsId).subscribe(() => {
-        this.successMessage = 'The article was successfully deleted.'; // Message de succès
-        this.errorMessage = ''; // Réinitialiser le message d'erreur
+        this.successMessage = 'The article was successfully deleted.';
+        this.errorMessage = '';
         this.isModalOpen = false;
-        // Ajouter un délai avant de rafraîchir la page (par exemple 2 secondes)
         setTimeout(() => {
-        this.router.navigate(['/']).then(() => {
-          window.location.reload();
-        });
+        this.mainPageComponent.ngOnInit(); // IN ORTHER TO REFRESH MY ARTICLES LIST, I COULD HAVE DONE IT WITH OBSERVALE ALSO
       }, 2000);
       },
       (error) => {
         this.errorMessage = error;
-        this.successMessage = ''; // Réinitialiser le message de succès
+        this.successMessage = '';
         this.isModalOpen = false;
       }
     );

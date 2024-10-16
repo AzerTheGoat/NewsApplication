@@ -7,6 +7,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {Article} from "../entities/Article";
 import {FilterCardsSearchInputPipe} from "../pipes/filterCardsSearchInput.pipe";
 import {FilterCardsSearchCategoryPipe} from "../pipes/filterCardsCategory.pipe";
+import {Category} from "../entities/Category";
 
 @Component({
   selector: 'app-main-page',
@@ -26,7 +27,7 @@ export class MainPageComponent implements OnInit{
   articles: Article[] = [];
   isLogged: boolean = false;
   searchText: string = '';
-  categorySelected: string = '';
+  categorySelected: Category = Category.NONE;
   isErrorOnFetchingArticles: boolean = false;
   isDataLoaded: boolean = false;
   errorMessage: string = '';

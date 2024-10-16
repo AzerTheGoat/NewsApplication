@@ -35,8 +35,7 @@ export class EditionArticleComponent implements OnInit {
 
   isErrorOnFetchingArticleDetailsWhileEditing: boolean = false;
 
-  categories = Object.values(Category); // Pour générer les options du select
-  Category = Category; // Pour accéder à l'énumération dans le template
+  categories = Object.values(Category);
 
   successMessage: string = '';
 
@@ -45,7 +44,7 @@ export class EditionArticleComponent implements OnInit {
       id: [undefined],
       title: ['', [Validators.required, Validators.minLength(5)]],
       subtitle: ['',[Validators.required]],
-      category: [Category.NONE, [Validators.required, this.categoryValidator]], // Ajout de la validation personnalisée
+      category: [Category.NONE, [Validators.required, this.categoryValidator]],
       abstract: ['', Validators.required],
       body: [''],
       image_media_type: [''],
@@ -145,13 +144,14 @@ export class EditionArticleComponent implements OnInit {
     const articleId = this.route.snapshot.paramMap.get('id');
 
     this.loginService.username$.subscribe(username => {
-        articleData.updated_by = username; 
+        articleData.updated_by = username;
 
         if (articleId && !isNaN(Number(articleId))) {
             // Mise à jour de l'article existant
             this.newsService.updateArticle(articleData).subscribe(
                 response => {
-                    this.successMessage = 'Article updated successfully!';
+                  window.alert('Article updated successfully!');
+                  this.successMessage = 'Article updated successfully!';
                     setTimeout(() => this.successMessage = '', 3000);
                     this.router.navigate(['/']);
                 },
@@ -174,12 +174,7 @@ export class EditionArticleComponent implements OnInit {
             );
         }
     });
-}
-
-
-  
-
-
+  }
   goToMainPage() {
     this.router.navigate(['/']);
   }
