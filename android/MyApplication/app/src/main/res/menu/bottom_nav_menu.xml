@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_all"
+        android:icon="@drawable/home"
+        android:title="All" />
+    <item
+        android:id="@+id/nav_national"
+        android:icon="@drawable/germany"
+    android:title="National" />
+    <item
+        android:id="@+id/nav_economy"
+        android:icon="@drawable/economy"
+    android:title="Economy" />
+    <item
+        android:id="@+id/nav_sports"
+        android:icon="@drawable/sports"
+    android:title="Sports" />
+    <item
+        android:id="@+id/nav_technology"
+        android:icon="@drawable/tech"
+    android:title="Technology" />
+</menu>

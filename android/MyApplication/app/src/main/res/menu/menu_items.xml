@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- login Item -->
+    <item
+        android:id="@+id/menu_login"
+        android:title="Login"
+        app:showAsAction="ifRoom" />
+
+    <!-- logout Item -->
+    <item
+        android:id="@+id/menu_logout"
+        android:title="Logout"
+        app:showAsAction="ifRoom" />
+
+    <!-- Create Article Item -->
+    <item
+        android:id="@+id/menu_create_article"
+        android:title="Create Article"
+        app:showAsAction="ifRoom" />
+
+</menu>

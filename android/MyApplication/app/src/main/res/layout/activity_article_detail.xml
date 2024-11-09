@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Article Image -->
+        <ImageView
+            android:id="@+id/articleImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Article Image"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray"
+            android:layout_alignParentTop="true" />
+
+        <!-- Article Title -->
+        <TextView
+            android:id="@+id/articleTitle"
+            android:layout_below="@id/articleImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <!-- Article Category -->
+        <TextView
+            android:id="@+id/articleCategory"
+            android:layout_below="@id/articleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <!-- Article Abstract -->
+        <TextView
+            android:id="@+id/articleAbstract"
+            android:layout_below="@id/articleCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <!-- Article Body Text -->
+        <TextView
+            android:id="@+id/articleBody"
+            android:layout_below="@id/articleAbstract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:paddingBottom="16dp" />
+
+        <!-- Last Modified Date -->
+        <TextView
+            android:id="@+id/articleModifiedDate"
+            android:layout_below="@id/articleBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!-- Modified By -->
+        <TextView
+            android:id="@+id/articleModifiedBy"
+            android:layout_below="@id/articleModifiedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!-- Footer or Additional Info -->
+        <TextView
+            android:id="@+id/articleFooter"
+            android:layout_below="@id/articleModifiedBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_alignParentEnd="true" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+
+    </RelativeLayout>
+</ScrollView>
