@@ -70,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
             PopupMenu popupMenu = new PopupMenu(this, v);
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_items, popupMenu.getMenu());  // Inflate menu
-            popupMenu.show();  // Show the popup menu
+
+          boolean isLoggedIn = LoginDataHolder.getInstance().isConnected();
+          popupMenu.getMenu().findItem(R.id.menu_login).setVisible(!isLoggedIn);
+          popupMenu.getMenu().findItem(R.id.menu_logout).setVisible(isLoggedIn);
+          popupMenu.getMenu().findItem(R.id.menu_create_article).setVisible(isLoggedIn);
+
+
+          popupMenu.show();  // Show the popup menu
 
             // Handle item selection
             popupMenu.setOnMenuItemClickListener(item ->
@@ -129,18 +136,6 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean isLoggedIn = LoginDataHolder.getInstance().isConnected();
-
-        // Set visibility based on login status
-        menu.findItem(R.id.menu_login).setVisible(!isLoggedIn);
-        menu.findItem(R.id.menu_logout).setVisible(isLoggedIn);
-        menu.findItem(R.id.menu_create_article).setVisible(isLoggedIn);
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     private void fetchArticles() {
         // Show the progress bar while fetching
         progressBar.setVisibility(View.VISIBLE);
@@ -175,24 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_items, menu);
-
-        // Check login status
-        boolean isLoggedIn = LoginDataHolder.getInstance().isConnected();
-
-        // Show or hide menu items based on login status
-        menu.findItem(R.id.menu_login).setVisible(!isLoggedIn);
-        menu.findItem(R.id.menu_logout).setVisible(isLoggedIn);
-        menu.findItem(R.id.menu_create_article).setVisible(isLoggedIn);
-
-        return true;
-    }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -210,8 +187,9 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Logout clicked", Toast.LENGTH_SHORT).show();
             // Perform logout action
             LoginDataHolder.getInstance().logout();
-            // After logout, refresh the activity or update UI
-            invalidateOptionsMenu(); // To trigger a menu refresh
+            findViewById(R.id.welcomeText).setVisibility(View.GONE);
+            invalidateOptionsMenu();
+            fetchArticles();
             return true;
         }  else {
             return super.onOptionsItemSelected(item);

@@ -23,6 +23,7 @@
 		private Image mainImage;
 		private String imageDescription;
 		private String thumbnail;
+    private String subtitleText;
 
 		public String getUsername() {
 			return username;
@@ -49,8 +50,6 @@
 			return (in==null?def:in).toString();
 		}
 
-
-
 		@SuppressWarnings("unchecked")
 		public Article(ModelManager mm, JSONObject jsonArticle){
 			super(mm);
@@ -58,7 +57,8 @@
 				id = Integer.parseInt(jsonArticle.get("id").toString());
 				idUser = Integer.parseInt(parseStringFromJson(jsonArticle,"id_user","0"));
 				titleText = parseStringFromJson(jsonArticle,"title","").replaceAll("\\\\","");
-				category = parseStringFromJson(jsonArticle,"category","").replaceAll("\\\\","");
+        subtitleText = parseStringFromJson(jsonArticle,"subtitle","").replaceAll("\\\\","");
+        category = parseStringFromJson(jsonArticle,"category","").replaceAll("\\\\","");
 				abstractText = parseStringFromJson(jsonArticle,"abstract","").replaceAll("\\\\","");
 				bodyText = parseStringFromJson(jsonArticle,"body","").replaceAll("\\\\","");
 				footerText = parseStringFromJson(jsonArticle,"footer","").replaceAll("\\\\","");
@@ -79,13 +79,14 @@
 			}
 		}
 
-		public Article(ModelManager mm, String category, String titleText, String abstractText, String body, String footer, Date date){
+		public Article(ModelManager mm, String category, String titleText, String subtitleText, String abstractText, String body, String footer, Date date){
 			super(mm);
 			id = -1;
 			this.category = category;
 			//idUser = Integer.parseInt(mm.getIdUser());
-			this.abstractText = abstractText;
+			this.abstractText = abstractText ;
 			this.titleText = titleText;
+      this.subtitleText=subtitleText;
 			bodyText = body;
 			footerText = footer;
 			update_date = date;
@@ -104,7 +105,7 @@
 		public String getTitleText() {
 			return titleText;
 		}
-
+    public String getSubtitleText() {return subtitleText;}
 		public String getCategory() {
 			return category;
 		}
@@ -114,6 +115,9 @@
 		public void setTitleText(String titleText) {
 			this.titleText = titleText;
 		}
+    public void setSubtitleText(String subtitleText) {
+      this.subtitleText = subtitleText;
+    }
 		public String getAbstractText() {
 			return abstractText;
 		}
@@ -168,6 +172,7 @@
 			return "Article [id=" + getId()
 					//+ "isPublic=" + isPublic + ", isDeleted=" + isDeleted
 					+", titleText=" + titleText
+          +", subtitleText=" + subtitleText
 					+", abstractText=" + abstractText
 					+  ", bodyText="	+ bodyText + ", footerText=" + footerText
 					//+ ", publicationDate=" + Utils.dateToString(publicationDate)
@@ -184,9 +189,10 @@
 			res.put("category", category);
 			res.put("abstract", abstractText);
 			res.put("title", titleText);
+      res.put("subtitle", subtitleText);
 			//res.put("is_deleted", ""+(isDeleted?1:0));
 			res.put("body", bodyText);
-			res.put("subtitle", footerText);
+			res.put("footer", footerText);
 			res.put("update_date", Utils.dateToString(update_date));
 			if (mainImage!=null){
 				res.put("image_data", mainImage.getImage());

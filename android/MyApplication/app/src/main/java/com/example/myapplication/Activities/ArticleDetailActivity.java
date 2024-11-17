@@ -1,11 +1,14 @@
 package com.example.myapplication.Activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,8 +29,10 @@ import java.util.Properties;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 
+    private static final int PICK_IMAGE = 1;
     private ProgressBar progressBar;
     private ImageView articleImage;
+    private Button btnChangeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +42,27 @@ public class ArticleDetailActivity extends AppCompatActivity {
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar); // Ensure this is in your layout
         articleImage = findViewById(R.id.articleImage);
+        btnChangeImage = findViewById(R.id.btnChangeImage2);
+
 
         // Display the progress bar while loading data
         progressBar.setVisibility(View.VISIBLE);
 
         // Fetch article details in background
         new FetchArticleTask().execute();
+
+        if (LoginDataHolder.getInstance().isConnected()) {
+          btnChangeImage.setVisibility(View.VISIBLE);
+        } else {
+          btnChangeImage.setVisibility(View.GONE);
+        }
+        btnChangeImage.setOnClickListener(v -> openImagePicker());
     }
+
+  private void openImagePicker() {
+    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    startActivityForResult(intent, PICK_IMAGE);
+  }
 
     private Bitmap decodeBase64(String input) {
         byte[] decodedBytes = Base64.decode(input, 0);
@@ -81,6 +100,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
             if (article != null) {
                 // Update the UI with article details
                 ((TextView) findViewById(R.id.articleTitle)).setText(article.getTitleText());
+                ((TextView) findViewById(R.id.articleSubtitle)).setText(article.getSubtitleText());
                 ((TextView) findViewById(R.id.articleCategory)).setText(article.getCategory());
                 ((TextView) findViewById(R.id.articleAbstract)).setText(article.getAbstractText());
                 ((TextView) findViewById(R.id.articleBody)).setText(article.getBodyText());
@@ -93,7 +113,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         String base64Image = article.getImage().getImage();
                         articleImage.setImageBitmap(decodeBase64(base64Image));
                     } else {
-                        articleImage.setVisibility(View.GONE);
+                      articleImage.setImageResource(R.drawable.default_image);
                     }
                 } catch (ServerCommunicationError e) {
                     throw new RuntimeException(e);

@@ -43,6 +43,7 @@ public class CreateArticleActivity extends Activity {
         setContentView(R.layout.activity_article_creation);
 
         EditText titleText = findViewById(R.id.editTextTitle);
+        EditText subtitleText = findViewById(R.id.editTextSubtitle);
         EditText categoryText = findViewById(R.id.editTextCategory);
         EditText abstractText = findViewById(R.id.editTextAbstract);
         EditText bodyText = findViewById(R.id.editTextBody);
@@ -55,11 +56,12 @@ public class CreateArticleActivity extends Activity {
 
         saveArticleButton.setOnClickListener(v -> {
             String title = titleText.getText().toString();
+            String subtitle = subtitleText.getText().toString();
             String category = categoryText.getText().toString();
             String abstractTextValue = abstractText.getText().toString();
             String body = bodyText.getText().toString();
 
-            if (title.isEmpty() || category.isEmpty() || abstractTextValue.isEmpty() || body.isEmpty()) {
+            if (title.isEmpty() || subtitle.isEmpty() || category.isEmpty() || abstractTextValue.isEmpty() || body.isEmpty()) {
                 Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -70,7 +72,7 @@ public class CreateArticleActivity extends Activity {
             Article article = null;
             ModelManager mm = null;
             try {
-                article = new Article(new ModelManager(properties), category, title, abstractTextValue, body, "footer", new Date());
+              article = new Article(new ModelManager(properties), category, title, subtitle, abstractTextValue, body, "footer", new Date());
             } catch (AuthenticationError e) {
                 throw new RuntimeException(e);
             }

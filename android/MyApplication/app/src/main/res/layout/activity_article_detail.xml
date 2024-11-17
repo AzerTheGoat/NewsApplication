@@ -33,10 +33,22 @@
             android:maxLines="2"
             android:ellipsize="end" />
 
+        <!-- Article Subtitle -->
+        <TextView
+          android:id="@+id/articleSubtitle"
+          android:layout_below="@id/articleTitle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:textSize="16sp"
+          android:textColor="@android:color/black"
+          android:maxLines="3"
+          android:ellipsize="end" />
+
         <!-- Article Category -->
         <TextView
             android:id="@+id/articleCategory"
-            android:layout_below="@id/articleTitle"
+            android:layout_below="@id/articleSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -98,7 +110,13 @@
             android:textColor="@android:color/darker_gray"
             android:layout_alignParentEnd="true" />
 
-        <ProgressBar
+      <Button
+        android:id="@+id/btnChangeImage2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Image" />
+
+      <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

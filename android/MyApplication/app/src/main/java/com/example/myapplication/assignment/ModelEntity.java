@@ -11,29 +11,29 @@ import org.json.simple.JSONObject;
 public abstract class ModelEntity {
 	protected int id;
 	protected ModelManager mm;
-	
+
 	/**
-	 * 
+	 *
 	 * @param mm
 	 */
 	public ModelEntity(ModelManager mm){
 		this.mm=mm;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the object id (-1) if not saved
 	 */
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return hashtable of attributes of the entity (without id)
 	 */
 	protected abstract Hashtable<String,String> getAttributes();
-	
+
 	/**
 	 * save the entity in remote server
 	 * @throws ServerCommunicationError
@@ -42,17 +42,17 @@ public abstract class ModelEntity {
 		int id = mm.save(this);
 		this.id = id;
 	}
-	
+
 	/**
-	 * delete the entity from remote server 
+	 * delete the entity from remote server
 	 * @throws ServerCommunicationError
 	 */
 	public void delete() throws ServerCommunicationError {
 		mm.delete(this);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return json object of the entity
 	 */
 	@SuppressWarnings("unchecked")

@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +20,6 @@ import com.example.myapplication.R;
 import com.example.myapplication.Services.FetchArticleDetailsService;
 import com.example.myapplication.Services.SaveArticleService;
 import com.example.myapplication.assignment.Article;
-import com.example.myapplication.assignment.Image;
 import com.example.myapplication.assignment.ModelManager;
 import com.example.myapplication.assignment.exceptions.AuthenticationError;
 import com.example.myapplication.assignment.exceptions.ServerCommunicationError;
@@ -31,7 +30,7 @@ import java.util.Properties;
 
 public class EditArticleActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 1;
-    private EditText editTitle, editCategory, editAbstract, editBody;
+    private EditText editTitle, editSubtitle, editCategory, editAbstract, editBody;
     private ImageView imageView;
     private Button btnChangeImage, btnSaveChanges, btnCancel;
     private Article currentArticle;
@@ -44,11 +43,12 @@ public class EditArticleActivity extends AppCompatActivity {
 
         // Initialize views
         editTitle = findViewById(R.id.editTitle);
+        editSubtitle = findViewById(R.id.editSubtitle);
         editCategory = findViewById(R.id.editCategory);
         editAbstract = findViewById(R.id.editAbstract);
         editBody = findViewById(R.id.editBody);
         imageView = findViewById(R.id.imageView);
-        btnChangeImage = findViewById(R.id.btnChangeImage);
+        btnChangeImage = findViewById(R.id.btnChangeImage2);
         btnSaveChanges = findViewById(R.id.btnSaveChanges);
         btnCancel = findViewById(R.id.btnCancel);
 
@@ -86,24 +86,29 @@ public class EditArticleActivity extends AppCompatActivity {
         }
     }
 
-    private void populateFields() {
-        if (currentArticle != null) {
-            editTitle.setText(currentArticle.getTitleText());
-            editCategory.setText(currentArticle.getCategory());
-            editAbstract.setText(currentArticle.getAbstractText());
-            editBody.setText(currentArticle.getBodyText());
+  private void populateFields() {
+    if (currentArticle != null) {
+      editTitle.setText(currentArticle.getTitleText());
+      editSubtitle.setText(currentArticle.getSubtitleText());
+      editCategory.setText(currentArticle.getCategory());
+      editAbstract.setText(currentArticle.getAbstractText());
+      editBody.setText(currentArticle.getBodyText());
 
-            // Load image if applicable
-            if (currentArticle.getThumbnail() != null) {
-                try {
-                    imageView.setImageBitmap(decodeBase64(currentArticle.getImage().getImage()));
-                } catch (ServerCommunicationError e) {
-                    throw new RuntimeException(e);
-                }
-                encodedImage = currentArticle.getThumbnail();
-            }
+      // Load image if applicable or set default image
+      if (currentArticle.getThumbnail() != null && !currentArticle.getThumbnail().isEmpty()) {
+        try {
+          imageView.setImageBitmap(decodeBase64(currentArticle.getImage().getImage()));
+        } catch (ServerCommunicationError e) {
+          throw new RuntimeException(e);
         }
+      } else {
+        // Set a default image if the article doesn't have a thumbnail
+        imageView.setImageResource(R.drawable.default_image);
+      }
+      encodedImage = currentArticle.getThumbnail();
     }
+  }
+
 
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -135,6 +140,7 @@ public class EditArticleActivity extends AppCompatActivity {
     private void saveArticleChanges() {
         // Update article object with new data
         currentArticle.setTitleText(editTitle.getText().toString());
+        currentArticle.setSubtitleText(editSubtitle.getText().toString());
         currentArticle.setCategory(editCategory.getText().toString());
         currentArticle.setAbstractText(editAbstract.getText().toString());
         currentArticle.setBodyText(editBody.getText().toString());

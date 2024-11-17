@@ -16,6 +16,12 @@
             android:hint="Title" />
 
         <EditText
+          android:id="@+id/editSubtitle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Subtitle" />
+
+        <EditText
             android:id="@+id/editCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +47,7 @@
             android:contentDescription="Article Image" />
 
         <Button
-            android:id="@+id/btnChangeImage"
+            android:id="@+id/btnChangeImage2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Change Image" />

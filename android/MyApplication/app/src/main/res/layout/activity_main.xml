@@ -18,9 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="brief.me!"
+            android:text="My News App"
             android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <!-- Menu Icon -->
         <ImageView

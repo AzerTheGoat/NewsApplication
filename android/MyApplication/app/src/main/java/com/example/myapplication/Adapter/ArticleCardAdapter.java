@@ -60,8 +60,7 @@ public class ArticleCardAdapter extends RecyclerView.Adapter<ArticleCardAdapter.
                 holder.setImage(base64Image);
                 holder.articleImage.setVisibility(View.VISIBLE);
             } else {
-                holder.articleImage.setVisibility(View.GONE);
-            }
+              holder.articleImage.setImageResource(R.drawable.default_image);            }
         } catch (ServerCommunicationError e) {
             throw new RuntimeException(e);
         }
