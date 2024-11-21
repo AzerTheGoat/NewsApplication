@@ -1,0 +1,99 @@
+<div class="bg-gray-800 text-white p-4">
+  <div class="container mx-auto flex justify-between items-center">
+
+    <!-- Mobile Menu Button -->
+    <button (click)="toggleMenu()" class="text-white md:hidden focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+
+    <!-- Left: Categories (Hidden on mobile unless menu is open) -->
+    <nav [ngClass]="{'hidden': !menuOpen, 'flex': menuOpen || !isMobile}" class="space-x-4 flex-col md:flex md:flex-row md:space-x-4 md:static absolute top-16 left-0 w-full md:w-auto bg-gray-800 md:bg-transparent z-50 p-4 md:p-0">
+      <button
+        (click)="newsService.setCategoryFilter(Category.NONE); menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.NONE}"
+        class="hover:text-gray-300">All</button>
+
+      <button
+        (click)="newsService.setCategoryFilter(Category.NATIONAL) ; menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.NATIONAL}"
+        class="hover:text-gray-300">National</button>
+
+      <button
+        (click)="newsService.setCategoryFilter(Category.ECONOMY) ; menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.ECONOMY}"
+        class="hover:text-gray-300">Economy</button>
+
+      <button
+        (click)="newsService.setCategoryFilter(Category.SPORT) ; menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.SPORT}"
+        class="hover:text-gray-300">Sports</button>
+
+      <button
+        (click)="newsService.setCategoryFilter(Category.TECHNOLOGY); menuOpen = false"
+        [ngClass]="{'active-category': categorySelected === Category.TECHNOLOGY}"
+        class="hover:text-gray-300">Technology</button>
+    </nav>
+
+    <!-- Center: Search Input (visible on all screen sizes) -->
+    <div class="">
+      <input [(ngModel)]="searchText" (input)="newsService.setSearchInput(searchText)"  type="text" placeholder="Search..." class="w-80 py-2 m-2 pl-4 pr-10 rounded-full bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+    </div>
+
+    <!-- Right: Login / User actions -->
+    <div *ngIf="!isLogged" class="md:block">
+      <button (click)="openModal()" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">
+        Login
+      </button>
+    </div>
+    <div *ngIf="isLogged" class="hidden md:flex items-center">
+      <p >Welcome {{usermane}}</p>
+      <button (click)="goToWriteArticle()" class="  ml-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">
+        Create Article
+      </button>
+      <button (click)="logout()" class="ml-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300">
+        Logout
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white rounded-lg w-96 p-6 shadow-lg">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="username" class="block text-gray-600">Username</label>
+        <input formControlName="username" type="text" id="username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username">
+        <div
+          *ngIf="usernameControl?.touched && usernameControl?.invalid"
+          class="text-right mt-2"
+        >
+          <small class="text-red-500">Username is required</small>
+        </div>
+      </div>
+      <div class="mb-6">
+        <label for="password" class="block text-gray-600">Password</label>
+        <input formControlName="password" type="password" id="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password">
+        <div
+          *ngIf="passwordControl?.touched && passwordControl?.invalid"
+          class="text-right mt-2"
+        >
+          <small class="text-red-500">Password is required</small>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-4">
+        <small *ngIf="!isCorrectLogs" class="text-red-500">Username or password incorrect</small>
+        <button type="button" (click)="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg">Cancel</button>
+        <button type="submit"
+                [ngClass]="{
+        'bg-blue-500 hover:bg-blue-600': loginForm.valid,
+        'bg-gray-500 cursor-not-allowed': !loginForm.valid
+      }"
+                [disabled]="!loginForm.valid" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">Login</button>
+      </div>
+    </form>
+  </div>
+</div>

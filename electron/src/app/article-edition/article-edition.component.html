@@ -1,0 +1,79 @@
+
+<!-- If the user is not logged in, show a message -->
+<div *ngIf="!isLogged" class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <p class="text-red-500">You need to be logged in to write an article.</p>
+  <!-- go back button -->
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+
+</div>
+
+<div *ngIf="isLogged" class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <div *ngIf="isErrorOnFetchingArticleDetailsWhileEditing" class="text-red-500">
+    Error while fetching article {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="articleForm" (ngSubmit)="saveArticle()">
+
+    <!-- Title -->
+    <label class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
+    <input formControlName="title" type="text" class="border rounded w-full py-2 px-3 mb-4" />
+    <div *ngIf="titleControl && titleControl.invalid && !titleControl.untouched" class="text-red-500">
+      Title is required and must be at least 6 characters.
+    </div>
+
+    <!-- Subtitle -->
+    <label class="block text-gray-700 text-sm font-bold mb-2">Subtitle:</label>
+    <input formControlName="subtitle" type="text" class="border rounded w-full py-2 px-3 mb-4" />
+    <div *ngIf="subtitleControl && subtitleControl.invalid && !subtitleControl.untouched" class="text-red-500">
+      Subtitle is required.
+    </div>
+
+    <!-- Image Upload -->
+    <label class="block text-gray-700 text-sm font-bold mb-2">Upload Image:</label>
+    <input type="file" (change)="fileChangeEvent($event)" class="mb-4" />
+    <div *ngIf="articleForm.get('image_data')?.value">
+      <img [src]="'data:' + articleForm.get('image_media_type')?.value + ';base64,' + articleForm.get('image_data')?.value" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-4" />
+    </div>
+    <div *ngIf="imageError" class="text-red-500">{{ imageError }}</div>
+
+    <!-- Category -->
+    <label class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
+    <select formControlName="category" class="border rounded w-full py-2 px-3 mb-4">
+      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+    <div *ngIf="categoryControl && categoryControl.invalid && !categoryControl.untouched" class="text-red-500">
+      None is not a valid category.
+    </div>
+
+
+    <!-- Abstract -->
+    <label class="block text-gray-700 text-sm font-bold mb-2">Abstract:</label>
+    <textarea formControlName="abstract" rows="3" class="border rounded w-full py-2 px-3 mb-4"></textarea>
+    <div *ngIf="abstractControl && abstractControl.invalid && !abstractControl.untouched" class="text-red-500">
+      Abstract is required.
+    </div>
+
+    <!-- Body -->
+    <label class="block text-gray-700 text-sm font-bold mb-2">Body:</label>
+    <textarea formControlName="body" rows="6" class="border rounded w-full py-2 px-3 mb-4"></textarea>
+
+    <div class="flex">
+      <!-- Submit Button -->
+      <button type="submit"
+              [class.bg-gray-500]="articleForm.invalid"
+              [class.bg-blue-500]="!articleForm.invalid"
+              class="text-white font-bold py-2 px-4 rounded">
+        Save Article
+      </button>
+      <!-- go back button -->
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4" (click)="goToMainPage()">Back</button>
+
+
+      <!-- Error Message -->
+      <p *ngIf="errorOnSubmit" class="m-3 text-red-500">
+        Error while saving article : {{ errorMessage }}
+      </p>
+    </div>
+  </form>
+</div>
+

@@ -1,0 +1,41 @@
+
+<div *ngIf="isErrorOnFetchingArticleDetailsWhileEditing" class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <h1 class="text-4xl font-bold mb-2">Error</h1>
+  <p class="text-xl text-gray-600 mb-4">An error occurred while fetching the article details.</p>
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+</div>
+
+<div *ngIf="!isErrorOnFetchingArticleDetailsWhileEditing" class="container mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <!-- Article Title -->
+  <h1 class="text-4xl font-bold mb-2">{{article.title}}</h1>
+
+  <!-- Article Subtitle -->
+  <h2 class="text-xl text-gray-600 mb-4">{{article.subtitle}}</h2>
+
+  <!-- Article Category -->
+  <span class="inline-block bg-blue-500 text-white text-sm font-semibold py-1 px-3 rounded-full mb-4">{{article.category}}</span>
+
+  <!-- Article Image -->
+  <img *ngIf="article.image_media_type === 'image/png'" class="w-full" [src]="'data:image/png;base64,' + article.image_data" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6"  />
+  <img *ngIf="article.image_media_type === 'image/jpeg'" class="w-full" [src]="'data:image/jpg;base64,' + article.image_data" alt="Article Image" class="w-2/5 h-auto mx-auto object-cover rounded-lg mb-6"  />
+
+  <!-- Article Abstract -->
+  <div class="text-sm text-black font-bold mb-4" [innerHTML]="article.abstract"></div>
+
+  <!-- Article Body -->
+  <div class="prose">
+    <div [innerHTML]="article.body"></div>
+  </div>
+
+  <!-- Article Last Modified Info -->
+  <div class="mt-8 text-gray-600 text-sm">
+    <p>Last modified on: <span class="font-semibold">{{ article.update_date | date:'longDate' }} at {{ article.update_date | date:'shortTime' }}</span></p>
+    <p>Modified by: <span class="font-semibold">{{ article.username }}</span></p>
+  </div>
+
+  <!-- Button Back -->
+  <div class = "flex ">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="goToMainPage()">Back</button>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ml-4" (click)="goToEditArticle()"  *ngIf="isLogged">edit</button>
+  </div>
+</div>
