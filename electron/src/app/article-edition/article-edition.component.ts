@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NewsService } from "../services/news.service";
 import { Article } from "../entities/Article";
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -8,6 +8,8 @@ import {HeaderComponent} from "../header/header.component";
 import _ from "lodash";
 import {LoginService} from "../services/login.service";
 import {Category} from "../entities/Category";
+import { ElectronService } from '../electron.service';
+
 
 @Component({
   selector: 'app-edition-article',
@@ -24,6 +26,7 @@ import {Category} from "../entities/Category";
 })
 export class EditionArticleComponent implements OnInit {
   articleForm: FormGroup;
+  categories = Object.values(Category);
   imageError: string | null = null;
   isImageSaved: boolean = false;
   cardImageBase64: string | null = null;
@@ -35,11 +38,18 @@ export class EditionArticleComponent implements OnInit {
 
   isErrorOnFetchingArticleDetailsWhileEditing: boolean = false;
 
-  categories = Object.values(Category);
-
   successMessage: string = '';
+  showNotificationSign: boolean = false;
 
-  constructor(private fb: FormBuilder, private newsService: NewsService, private route: ActivatedRoute, private router: Router, private loginService: LoginService) {
+  constructor(
+    private fb: FormBuilder, 
+    private newsService: NewsService, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private loginService: LoginService,
+    private electronService: ElectronService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.articleForm = this.fb.group({
       id: [undefined],
       title: ['', [Validators.required, Validators.minLength(5)]],
@@ -50,6 +60,7 @@ export class EditionArticleComponent implements OnInit {
       image_media_type: [''],
       image_data: ['']
     });
+
     this.loginService.isLogged$.subscribe(status => {
       this.isLogged = status;
     });
@@ -87,6 +98,72 @@ export class EditionArticleComponent implements OnInit {
 
   get abstractControl() {
     return this.articleForm.get('abstract');
+  }
+
+  sendNotification(title: string, message: string, callback?: () => void) {
+    this.electronService.sendNotification({
+      title,
+      message,
+      callback: () => {
+        if (callback) callback();
+        this.showNotificationSign = true;
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.showNotificationSign = false;
+          this.cdr.detectChanges();
+        }, 5000);
+      },
+    });
+  }
+
+  validateFields(): boolean {
+    let isValid = true;
+
+    if (!this.articleForm.get('title')?.value || this.articleForm.get('title')?.value.trim().length < 5) {
+      this.sendNotification(
+        'Title Missing or Too Short',
+        'The title must be at least 5 characters long.',
+        () => this.scrollToField('title')
+      );
+      isValid = false;
+    }
+
+    if (!this.articleForm.get('subtitle')?.value || this.articleForm.get('subtitle')?.value.trim().length < 5) {
+      this.sendNotification(
+        'Subtitle Missing or Too Short',
+        'The subtitle must be at least 5 characters long.',
+        () => this.scrollToField('subtitle')
+      );
+      isValid = false;
+    }
+
+    if (!this.articleForm.get('abstract')?.value || this.articleForm.get('abstract')?.value.trim().length < 10) {
+      this.sendNotification(
+        'Abstract Missing or Too Short',
+        'The abstract must be at least 10 characters long.',
+        () => this.scrollToField('abstract')
+      );
+      isValid = false;
+    }
+
+    if (this.articleForm.get('category')?.value === Category.NONE) {
+      this.sendNotification(
+        'Category Missing',
+        'Please select a valid category for the article.',
+        () => this.scrollToField('category')
+      );
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  scrollToField(fieldName: string) {
+    const field = document.querySelector(`[formControlName="${fieldName}"]`);
+    if (field) {
+      (field as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      (field as HTMLElement).focus();
+    }
   }
 
 
@@ -134,11 +211,15 @@ export class EditionArticleComponent implements OnInit {
   saveArticle() {
     this.markAllAsTouched();
 
-    if (this.articleForm.invalid) {
+    if (!this.validateFields()) {
+      return;
+    }
+
+/*     if (this.articleForm.invalid) {
         this.errorOnSubmit = true;
         this.errorMessage = 'Please fill in the required fields.';
         return;
-    }
+    } */
 
     const articleData = this.articleForm.value;
     const articleId = this.route.snapshot.paramMap.get('id');
@@ -150,26 +231,30 @@ export class EditionArticleComponent implements OnInit {
             // Mise à jour de l'article existant
             this.newsService.updateArticle(articleData).subscribe(
                 response => {
-                  window.alert('Article updated successfully!');
+                  /* window.alert('Article updated successfully!');
                   this.successMessage = 'Article updated successfully!';
-                    setTimeout(() => this.successMessage = '', 3000);
+                    setTimeout(() => this.successMessage = '', 3000); */
+                    this.sendNotification('Article Updated', 'The article has been updated successfully.');
                     this.router.navigate(['/']);
                 },
                 error => {
-                    this.errorOnSubmit = true;
-                    this.errorMessage = 'Failed to update the article: ' + error.message;
+                  /*   this.errorOnSubmit = true;
+                    this.errorMessage = 'Failed to update the article: ' + error.message; */
+                    this.sendNotification('Update Failed', `Failed to update the article: ${error.message}`);
                 }
             );
         } else {
             // Création d'un nouvel article
             this.newsService.createArticle(articleData).subscribe(
                 response => {
-                    window.alert('Article created successfully!');
+                    /* window.alert('Article created successfully!'); */
+                    this.sendNotification('Article Created', 'The article has been created successfully.');
                     this.router.navigate(['/']);
                 },
                 error => {
-                    this.errorOnSubmit = true;
-                    this.errorMessage = 'Failed to create the article: ' + error.message;
+                    /* this.errorOnSubmit = true;
+                    this.errorMessage = 'Failed to create the article: ' + error.message; */
+                    this.sendNotification('Creation Failed', `Failed to create the article: ${error.message}`);
                 }
             );
         }
