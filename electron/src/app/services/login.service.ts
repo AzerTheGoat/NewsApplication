@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {User} from "../entities/User";
+import { ElectronService } from '../electron.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,7 @@ import {User} from "../entities/User";
 export class LoginService {
 
   private user: User | null = null;
-
   private loginUrl = 'http://sanger.dia.fi.upm.es/pui-rest-news/login';
-
   private message: string | null = null;
 
   private isLoggedSubject = new BehaviorSubject<boolean>(false);
@@ -23,7 +22,9 @@ export class LoginService {
       .set('Content-Type', 'x-www-form-urlencoded')
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private electronService: ElectronService) { 
+    this.loadSession();
+  }
 
   isLogged$ = this.isLoggedSubject.asObservable();
   username$ = this.usernameSubject.asObservable();
@@ -46,6 +47,9 @@ export class LoginService {
     return this.http.post<User>(this.loginUrl, usereq).pipe(
       tap(user => {
         this.user = user;
+        this.setLoggedStatus(true);
+        this.setUsername(user.username);
+        this.saveSession(user);
         console.log(user)
       })
     );
@@ -57,6 +61,26 @@ export class LoginService {
 
   logout() {
     this.user = null;
+    this.setLoggedStatus(false);
+    this.setUsername("");
+    this.electronService.clearSession();
+  }
+
+  private saveSession(user: User) {
+    // Sauvegarder la session sur le système de fichiers via le service Electron
+    this.electronService.saveSession({ token: user.token, user: user });
+  }
+
+  private loadSession() {
+    // Charger la session depuis le système de fichiers via le service Electron
+    this.electronService.loadSession().then(session => {
+      if (session) {
+        this.user = session.user;
+        this.setLoggedStatus(true);
+        this.setUsername(session.user.username);
+        console.log('Session loaded:', session);
+      }
+    });
   }
 
 
